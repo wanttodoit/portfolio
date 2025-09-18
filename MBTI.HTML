@@ -1,25 +1,378 @@
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>간단한 MBTI 테스트</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>인터랙티브 MBTI 테스트</title>
+  <style>
+    :root{
+      --bg:#0b0f14; --card:#111824; --muted:#5c708a; --text:#e6edf3; --brand:#7aa2f7; --accent:#a6da95; --warn:#f7768e;
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Noto Sans,Apple SD Gothic Neo,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";background:linear-gradient(180deg,#0b0f14,#0f1520 45%,#0b0f14);color:var(--text)}
+    .wrap{max-width:920px;margin:40px auto;padding:20px}
+    header{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:16px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:40px;height:40px;border-radius:12px;background:radial-gradient(circle at 30% 30%,var(--brand),#2e3b55);display:grid;place-items:center;color:#0b0f14;font-weight:900}
+    h1{font-size:clamp(18px,3vw,28px);margin:0}
+    .card{background:rgba(17,24,36,.75);backdrop-filter:blur(10px);border:1px solid rgba(122,162,247,.15);border-radius:var(--radius);padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    .row{display:flex;gap:16px;flex-wrap:wrap}
+    .grow{flex:1 1 300px}
+
+    .toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin:12px 0}
+    .btn{appearance:none;border:1px solid rgba(122,162,247,.35);background:#0e1522;color:var(--text);padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:600}
+    .btn[disabled]{opacity:.4;cursor:not-allowed}
+    .btn.primary{background:linear-gradient(180deg, #1b2a44, #152032);border-color:rgba(122,162,247,.6)}
+    .btn.ghost{background:transparent}
+    .btn.danger{border-color:rgba(247,118,142,.5)}
+    .switch{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:14px}
+    .switch input{accent-color:var(--brand)}
+
+    .progress{height:10px;border-radius:999px;background:#0e1522;border:1px solid rgba(122,162,247,.25);overflow:hidden}
+    .bar{height:100%;width:0;background:linear-gradient(90deg,var(--brand),#73daca);transition:width .3s}
+
+    .q-title{font-size:20px;line-height:1.4;margin:4px 0 16px}
+    .options{display:grid;gap:10px}
+    .opt{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid rgba(122,162,247,.25);border-radius:12px;background:#0e1522;cursor:pointer}
+    .opt input{accent-color:var(--accent)}
+    .opt:hover{border-color:rgba(122,162,247,.6)}
+
+    .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .tag{font-size:12px;padding:4px 8px;border-radius:999px;border:1px solid rgba(122,162,247,.25);color:var(--muted)}
+
+    .result{display:none}
+    .type-badge{font-weight:800;font-size:28px;letter-spacing:.5px}
+    .pill{display:inline-block;border:1px solid rgba(122,162,247,.35);border-radius:999px;padding:6px 10px;margin-right:8px;color:var(--muted);font-size:13px}
+
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .meter{background:#0e1522;border:1px solid rgba(122,162,247,.25);border-radius:12px;overflow:hidden}
+    .meter .fill{height:12px;background:linear-gradient(90deg,#73daca,var(--brand))}
+    .meter .label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);padding:6px 8px}
+
+    .desc{white-space:pre-wrap;font-size:15px;color:#d0d7e1}
+    footer{margin-top:28px;color:var(--muted);font-size:12px;text-align:center}
+    a{color:#9ab8ff;text-decoration:none}
+    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#0e1522;border:1px solid rgba(122,162,247,.25);padding:2px 6px;border-radius:6px;font-size:12px}
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>나의 MBTI 유형은?</h1>
-        <div id="test-box">
-            <h2 id="question">질문이 여기에 표시됩니다.</h2>
-            <button class="answer-btn" data-type="E">사람들과 어울리는 것을 즐긴다.</button>
-            <button class="answer-btn" data-type="I">혼자 조용히 시간을 보내는 것을 선호한다.</button>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">MB</div>
+        <h1>인터랙티브 MBTI 테스트</h1>
+      </div>
+      <label class="switch"><input id="persistToggle" type="checkbox" checked> 결과 저장</label>
+    </header>
+
+    <div class="card">
+      <div class="toolbar">
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn ghost" id="resetBtn">초기화</button>
+          <button class="btn" id="shareBtn">결과 공유</button>
         </div>
-        <div id="result-box" style="display: none;">
-            <h2>당신의 MBTI 유형은...</h2>
-            <p id="result"></p>
-            <p id="description"></p>
-            <button id="retry-btn">다시하기</button>
+        <div style="min-width:220px" class="grow">
+          <div class="progress" aria-label="진행률"><div class="bar" id="bar"></div></div>
         </div>
+        <div class="tags">
+          <span class="tag">E/I</span><span class="tag">S/N</span><span class="tag">T/F</span><span class="tag">J/P</span>
+        </div>
+      </div>
+
+      <div id="quiz"></div>
+
+      <div class="toolbar" style="margin-top:16px">
+        <button class="btn" id="prevBtn">이전</button>
+        <div style="flex:1"></div>
+        <button class="btn primary" id="nextBtn">다음</button>
+      </div>
     </div>
-    <script src="script.js"></script>
+
+    <div class="card result" id="resultCard">
+      <div class="row">
+        <div class="grow">
+          <div class="type-badge" id="typeBadge">—</div>
+          <div class="tags" id="facetPills"></div>
+          <p class="desc" id="typeDesc"></p>
+        </div>
+      </div>
+
+      <h3 style="margin:8px 0 12px">성향 지표</h3>
+      <div class="grid" id="meters"></div>
+
+      <div class="row" style="margin-top:16px">
+        <button class="btn" id="restartBtn">다시 테스트</button>
+      </div>
+    </div>
+
+    <footer>
+      <p>이 파일 하나만으로 동작합니다. 깃허브 페이지에 그대로 올리면 됩니다. 저장은 브라우저 <span class="kbd">localStorage</span>를 사용합니다.</p>
+    </footer>
+  </div>
+
+<script>
+// ====== 데이터 ======
+const QUESTIONS = [
+  // E/I
+  { id:1, dim:"EI", text:"새로운 사람들과 빠르게 친해진다", left:"I", right:"E" },
+  { id:2, dim:"EI", text:"생각을 정리하기 전에 말로 먼저 풀어내는 편이다", left:"I", right:"E" },
+  { id:3, dim:"EI", text:"긴 하루 뒤에는 사람들과 어울리며 에너지를 충전한다", left:"I", right:"E" },
+  // S/N
+  { id:4, dim:"SN", text:"아이디어보다는 현실의 사실과 데이터를 우선한다", left:"N", right:"S" },
+  { id:5, dim:"SN", text:"미래의 가능성과 패턴을 상상하는 것이 즐겁다", left:"S", right:"N" },
+  { id:6, dim:"SN", text:"설명은 구체적인 예시가 많을수록 이해가 쉽다", left:"N", right:"S" },
+  // T/F
+  { id:7, dim:"TF", text:"결정은 원칙과 논리로 내리는 편이다", left:"F", right:"T" },
+  { id:8, dim:"TF", text:"갈등 상황에서도 객관적 기준을 중시한다", left:"F", right:"T" },
+  { id:9, dim:"TF", text:"칭찬과 공감이 동기부여에 더 큰 영향을 준다", left:"T", right:"F" },
+  // J/P
+  { id:10, dim:"JP", text:"할 일 목록을 만들어 계획적으로 움직인다", left:"P", right:"J" },
+  { id:11, dim:"JP", text:"마감이 다가오면 초반에 미리 끝내 두는 편이다", left:"P", right:"J" },
+  { id:12, dim:"JP", text:"즉흥적 선택보다 사전 결정이 마음이 편하다", left:"P", right:"J" },
+];
+
+// 각 문항은 7점 리커트. 1=왼쪽 선택 강함, 7=오른쪽 선택 강함
+const SCALE = [
+  {v:1,label:"왼쪽 매우 동의"},
+  {v:2,label:"왼쪽 동의"},
+  {v:3,label:"왼쪽 약간"},
+  {v:4,label:"중립"},
+  {v:5,label:"오른쪽 약간"},
+  {v:6,label:"오른쪽 동의"},
+  {v:7,label:"오른쪽 매우 동의"},
+];
+
+const TYPE_DESC = {
+  ISTJ:"책임감이 강하고 체계적입니다. 사실과 근거를 바탕으로 안정적인 성과를 추구합니다.",
+  ISFJ:"성실하고 배려심이 깊습니다. 조용히 헌신하며 신뢰를 쌓습니다.",
+  INFJ:"통찰력이 뛰어나며 의미와 가치를 중시합니다. 사람과 아이디어를 깊게 연결합니다.",
+  INTJ:"전략적 사고와 장기 계획에 강합니다. 시스템을 개선하고 비전을 실행합니다.",
+  ISTP:"차분하고 현실적 문제 해결자입니다. 손으로 만지고 실험하며 학습합니다.",
+  ISFP:"따뜻하고 감수성이 풍부합니다. 조화와 진정성을 소중히 여깁니다.",
+  INFP:"이상과 가치 중심으로 움직입니다. 가능성을 믿고 창의적 표현을 즐깁니다.",
+  INTP:"호기심 많은 분석가입니다. 원리 탐구와 개념 설계를 즐깁니다.",
+  ESTP:"민첩하고 실행력이 좋습니다. 현실 감각으로 기회를 포착합니다.",
+  ESFP:"활기차고 사교적입니다. 경험을 통해 즐거움을 나눕니다.",
+  ENFP:"열정적인 아이디어 메이커입니다. 가능성을 확장하고 영감을 줍니다.",
+  ENTP:"창의적 문제 청부사입니다. 대안을 만들고 고정관념을 깨뜨립니다.",
+  ESTJ:"조직화와 실행에 능합니다. 목표를 향해 자원을 정렬합니다.",
+  ESFJ:"공감과 협력의 촉진자입니다. 관계를 돌보고 팀워크를 강화합니다.",
+  ENFJ:"사람을 성장시키는 리더입니다. 비전을 제시하고 조화를 이끕니다.",
+  ENTJ:"결단력 있는 지휘자입니다. 구조를 설계하고 대담하게 추진합니다.",
+};
+
+// ====== 상태 ======
+let state = {
+  index: 0, // 현재 문항 인덱스
+  answers: {}, // { qid: value(1-7) }
+};
+
+// 복원: URL 해시 또는 localStorage
+(function restore(){
+  try{
+    const hash = location.hash.replace('#','');
+    if(hash){
+      const dec = JSON.parse(decodeURIComponent(atob(hash)));
+      if(dec && dec.answers) state = dec;
+    } else {
+      const saved = localStorage.getItem('mbti_state_v1');
+      if(saved) state = JSON.parse(saved);
+    }
+  }catch(e){/* noop */}
+})();
+
+// ====== 유틸 ======
+function save(){
+  if(document.getElementById('persistToggle').checked){
+    localStorage.setItem('mbti_state_v1', JSON.stringify(state));
+  }
+}
+
+function pct(n,d){return d===0?0:Math.round((n/d)*100)}
+
+function compute(){
+  const dimSum = { E:0, I:0, S:0, N:0, T:0, F:0, J:0, P:0 };
+  let answered = 0;
+  QUESTIONS.forEach(q=>{
+    const v = state.answers[q.id];
+    if(!v) return;
+    answered++;
+    // 1..7, 가운데 4는 0점. 오른쪽으로 갈수록 right 글자에 가중치, 왼쪽은 left 글자에 가중치
+    const rightBias = v - 4; // -3..+3
+    if(rightBias > 0){
+      dimSum[q.right] += rightBias;
+    } else if(rightBias < 0){
+      dimSum[q.left] += (-rightBias);
+    }
+  });
+  // EI, SN, TF, JP 각각 승자 선정
+  const EI = dimSum.E >= dimSum.I ? 'E' : 'I';
+  const SN = dimSum.S >= dimSum.N ? 'S' : 'N';
+  const TF = dimSum.T >= dimSum.F ? 'T' : 'F';
+  const JP = dimSum.J >= dimSum.P ? 'J' : 'P';
+  const type = `${EI}${SN}${TF}${JP}`;
+
+  // 백분율 계산용
+  function pair(a,b){
+    const total = dimSum[a]+dimSum[b] || 1;
+    return { [a]: pct(dimSum[a], total), [b]: pct(dimSum[b], total) };
+  }
+  return {
+    type,
+    sums: dimSum,
+    perc: { ...pair('E','I'), ...pair('S','N'), ...pair('T','F'), ...pair('J','P') },
+    answered,
+  };
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[state.index];
+  const quiz = document.getElementById('quiz');
+  const currentVal = state.answers[q.id] || 0;
+
+  const scaleHtml = SCALE.map(s=>{
+    const id = `q${q.id}_${s.v}`;
+    return `<label class="opt" for="${id}">
+      <input type="radio" id="${id}" name="q${q.id}" value="${s.v}" ${currentVal===s.v?'checked':''}/>
+      <div>
+        <div style="font-weight:700">${s.v}점</div>
+        <div style="font-size:13px;color:var(--muted)">${s.label}</div>
+      </div>
+    </label>`;
+  }).join('');
+
+  quiz.innerHTML = `
+    <div class="q-title">Q${state.index+1}. ${q.text}</div>
+    <div class="tags"><span class="pill">${q.dim}</span> <span class="pill">1↔7 리커트</span></div>
+    <div class="options" role="radiogroup" aria-label="${q.text}">${scaleHtml}</div>
+  `;
+
+  // 버튼 상태
+  document.getElementById('prevBtn').disabled = state.index===0;
+  document.getElementById('nextBtn').textContent = state.index===QUESTIONS.length-1? '결과 보기' : '다음';
+
+  // 진행률
+  const bar = document.getElementById('bar');
+  const progress = Math.round(((state.index)/QUESTIONS.length)*100);
+  bar.style.width = progress + '%';
+
+  // 선택 핸들러
+  quiz.querySelectorAll('input[type="radio"]').forEach(el=>{
+    el.addEventListener('change', ()=>{
+      state.answers[q.id] = Number(el.value);
+      save();
+    });
+  });
+}
+
+function renderResult(){
+  const res = compute();
+  const allAnswered = Object.keys(state.answers).length === QUESTIONS.length;
+  if(!allAnswered){
+    alert('모든 문항에 응답해 주세요.');
+    return;
+  }
+  document.getElementById('resultCard').style.display = 'block';
+  document.getElementById('typeBadge').textContent = res.type;
+  document.getElementById('typeDesc').textContent = TYPE_DESC[res.type] || '특성 설명 준비 중입니다.';
+
+  const pills = [
+    res.perc.E >= res.perc.I ? `E ${res.perc.E}%` : `I ${res.perc.I}%`,
+    res.perc.S >= res.perc.N ? `S ${res.perc.S}%` : `N ${res.perc.N}%`,
+    res.perc.T >= res.perc.F ? `T ${res.perc.T}%` : `F ${res.perc.F}%`,
+    res.perc.J >= res.perc.P ? `J ${res.perc.J}%` : `P ${res.perc.P}%`,
+  ];
+  document.getElementById('facetPills').innerHTML = pills.map(t=>`<span class="pill">${t}</span>`).join('');
+
+  const meters = [
+    ['E','I'],['S','N'],['T','F'],['J','P']
+  ].map(([a,b])=>{
+    const total = res.sums[a]+res.sums[b] || 1;
+    const ap = Math.round((res.sums[a]/total)*100);
+    return `<div class="meter">
+      <div class="label"><span>${a}</span><span>${b}</span></div>
+      <div class="fill" style="width:${ap}%" title="${a} ${ap}%"></div>
+    </div>`;
+  }).join('');
+  document.getElementById('meters').innerHTML = meters;
+
+  // 완료 진행률
+  document.getElementById('bar').style.width = '100%';
+
+  // URL 공유 해시 저장
+  const payload = btoa(encodeURIComponent(JSON.stringify(state)));
+  location.hash = payload;
+}
+
+// ====== 이벤트 ======
+
+// 초기 렌더
+renderQuestion();
+if(Object.keys(state.answers).length === QUESTIONS.length){
+  // 이미 다 풀었으면 결과 표시 옵션
+  try{ renderResult(); }catch{ /* noop */ }
+}
+
+// 네비게이션
+const nextBtn = document.getElementById('nextBtn');
+const prevBtn = document.getElementById('prevBtn');
+
+nextBtn.addEventListener('click', ()=>{
+  if(state.index === QUESTIONS.length-1){
+    renderResult();
+    return;
+  }
+  // 현재 문항 응답 체크
+  const q = QUESTIONS[state.index];
+  if(!state.answers[q.id]){
+    alert('이 문항에 응답해 주세요.');
+    return;
+  }
+  state.index = Math.min(QUESTIONS.length-1, state.index+1);
+  save();
+  renderQuestion();
+});
+
+prevBtn.addEventListener('click', ()=>{
+  state.index = Math.max(0, state.index-1);
+  save();
+  renderQuestion();
+});
+
+// 초기화
+const resetBtn = document.getElementById('resetBtn');
+resetBtn.addEventListener('click', ()=>{
+  if(!confirm('모든 응답과 저장된 상태를 지울까요?')) return;
+  state = { index:0, answers:{} };
+  localStorage.removeItem('mbti_state_v1');
+  location.hash = '';
+  document.getElementById('resultCard').style.display = 'none';
+  document.getElementById('bar').style.width = '0%';
+  renderQuestion();
+});
+
+// 공유
+const shareBtn = document.getElementById('shareBtn');
+shareBtn.addEventListener('click', async ()=>{
+  const payload = btoa(encodeURIComponent(JSON.stringify(state)));
+  const url = location.origin + location.pathname + '#' + payload;
+  try{
+    await navigator.clipboard.writeText(url);
+    shareBtn.textContent = '링크 복사됨';
+    setTimeout(()=>shareBtn.textContent='결과 공유',1500);
+  }catch(e){
+    prompt('아래 URL을 수동으로 복사하세요', url);
+  }
+});
+
+// 다시 테스트
+const restartBtn = document.getElementById('restartBtn');
+restartBtn.addEventListener('click', ()=>{
+  state.index = 0;
+  document.getElementById('resultCard').style.display = 'none';
+  renderQuestion();
+});
+</script>
 </body>
 </html>
