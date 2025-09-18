@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jaekyun Lee | AI & Embedded Systems Portfolio</title>
+  <meta name="description" content="AI 연구/개발 · 임베디드 시스템 전문가 포트폴리오 — 프로젝트, 논문/특허, 기술스택, 강의/발표, 연락처" />
+  <meta name="author" content="Jaekyun Lee" />
+  <!-- Open Graph -->
+  <meta property="og:title" content="Jaekyun Lee | AI & Embedded Systems" />
+  <meta property="og:description" content="AI · 임베디드 개발 포트폴리오" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/assets/og-cover.png" />
+  <meta property="og:url" content="https://your-github-username.github.io/" />
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Jaekyun Lee | AI & Embedded" />
+  <meta name="twitter:description" content="AI · 임베디드 개발 포트폴리오" />
+  <meta name="twitter:image" content="/assets/og-cover.png" />
+  <link rel="icon" href="/assets/favicon.png" />
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --card: #111318;
+      --muted: #9aa3af;
+      --text: #e5e7eb;
+      --accent: #60a5fa; /* blue-400 */
+      --accent-2: #34d399; /* emerald-400 */
+      --ring: rgba(96,165,250,0.35);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans);
+      line-height: 1.6; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    header {
+      position: sticky; top: 0; z-index: 50; backdrop-filter: blur(8px);
+      background: rgba(11,12,16,0.7); border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .brand { display: flex; gap: 10px; align-items: center; font-weight: 700; }
+    .brand .dot { width: 10px; height: 10px; border-radius: 9999px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 0 0 3px var(--ring); }
+    .nav a { margin-left: 18px; font-size: 0.95rem; color: var(--text); opacity: 0.9; }
+    .nav a:hover { opacity: 1; }
+    .menu-btn { display: none; }
+
+    .hero { padding: 64px 0 32px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hero-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; align-items: center; }
+    .title { font-size: clamp(1.8rem, 3.5vw, 2.8rem); margin: 0 0 8px; letter-spacing: -0.3px; }
+    .subtitle { color: var(--muted); margin: 0 0 18px; }
+    .badges { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 22px; }
+    .badge { border: 1px solid rgba(255,255,255,0.1); background: var(--card); padding: 6px 10px; border-radius: 9999px; font-size: 0.85rem; }
+    .cta { display: flex; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 10px; font-weight: 600; border: 1px solid rgba(255,255,255,0.12); background: var(--card); color: var(--text); }
+    .btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #0b0c10; border: none; }
+    .btn:hover { filter: brightness(1.05); text-decoration: none; }
+    .headshot { width: 100%; aspect-ratio: 1 / 1; border-radius: 18px; background: radial-gradient(80% 80% at 30% 30%, rgba(96,165,250,0.2), transparent 60%), #0e1116; border: 1px solid rgba(255,255,255,0.06); }
+
+    section { padding: 48px 0; }
+    h2 { font-size: clamp(1.2rem, 2.5vw, 1.8rem); margin: 0 0 18px; }
+    .section-desc { color: var(--muted); margin-top: -6px; margin-bottom: 18px; }
+    .grid { display: grid; gap: 16px; }
+
+    .card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px; }
+    .card:hover { border-color: rgba(96,165,250,0.4); box-shadow: 0 10px 30px -12px rgba(96,165,250,0.25); }
+
+    .skills { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .skill-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+    .skill-list li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; border-radius: 10px; background: var(--card); border: 1px solid rgba(255,255,255,0.06); font-size: 0.95rem; }
+    .pill { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
+
+    .projects { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .project-cover { height: 160px; border-radius: 12px; background: #0e1116; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 10px; display: grid; place-items: center; font-family: var(--mono); color: var(--muted); }
+    .project-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px; }
+    .tag { padding: 4px 8px; border-radius: 9999px; font-size: 0.75rem; border: 1px solid rgba(255,255,255,0.12); color: var(--muted); }
+
+    .timeline { border-left: 2px solid rgba(255,255,255,0.12); padding-left: 14px; display: grid; gap: 12px; }
+    .tl-item { position: relative; }
+    .tl-item::before { content: ""; position: absolute; left: -11px; top: 6px; width: 12px; height: 12px; border-radius: 9999px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 0 0 3px var(--ring); }
+    .meta { font-size: 0.85rem; color: var(--muted); }
+
+    footer { padding: 36px 0 64px; color: var(--muted); font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.08); }
+
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .menu-btn { display: inline-flex; }
+      .nav-links { display: none; }
+      .nav-links.open { display: flex; flex-direction: column; gap: 10px; padding: 12px 0 16px; }
+    }
+  </style>
+  <script>
+    // Simple dark toggle (kept for future light theme extension)
+    const Theme = {
+      get() { return localStorage.getItem('theme') || 'dark'; },
+      set(t) { localStorage.setItem('theme', t); document.documentElement.dataset.theme = t; }
+    };
+    document.addEventListener('DOMContentLoaded', () => {
+      Theme.set(Theme.get());
+      const menuBtn = document.querySelector('#menu-btn');
+      const links = document.querySelector('#nav-links');
+      menuBtn?.addEventListener('click', () => links.classList.toggle('open'));
+      // Smooth scroll
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+          const id = a.getAttribute('href');
+          if (id.length > 1) { e.preventDefault(); document.querySelector(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        });
+      });
+    });
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Jaekyun Lee",
+    "jobTitle": "AI & Embedded Systems Engineer",
+    "url": "https://your-github-username.github.io/",
+    "sameAs": [
+      "https://github.com/your-github-username",
+      "https://www.linkedin.com/in/your-linkedin/"
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand"><span class="dot"></span> <span>Jaekyun Lee</span></div>
+      <button id="menu-btn" class="btn menu-btn" aria-label="Toggle Menu">☰</button>
+      <nav id="nav-links" class="nav-links">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#publications">Publications</a>
+        <a href="#talks">Talks</a>
+        <a href="#contact">Contact</a>
+        <a href="resume.pdf" target="_blank" rel="noopener">Resume</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <h1 class="title">AI · 임베디드 개발 전문가<br/>Jaekyun Lee</h1>
+          <p class="subtitle">경량화된 AI 모델을 실세계 임베디드 하드웨어에 탑재하여 <strong>지연을 줄이고</strong> <strong>신뢰성을 높이는</strong> 시스템을 만듭니다. UAM/모빌리티, 위성/영상처리, 로보틱스 도메인 경험.</p>
+          <div class="badges">
+            <span class="badge">Edge AI (TensorRT / TVM / ONNX)</span>
+            <span class="badge">Embedded C/C++ · RTOS</span>
+            <span class="badge">Python · PyTorch</span>
+            <span class="badge">Computer Vision</span>
+            <span class="badge">UAM · CPS</span>
+          </div>
+          <div class="cta">
+            <a class="btn primary" href="#projects">View Projects</a>
+            <a class="btn" href="mailto:hello@example.com">Contact</a>
+            <a class="btn" href="https://github.com/your-github-username" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+        <div>
+          <div class="headshot" aria-label="profile cover / headshot placeholder"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="container">
+      <h2>About</h2>
+      <p class="section-desc">연구와 현장 적용 사이의 간극을 줄이는 것을 좋아합니다. AI 모델의 정확도/속도 균형을 설계하고, 센서·펌웨어·네트워킹을 아우르는 임베디드 스택을 통합합니다. (한/영 사용 가능)</p>
+      <div class="grid" style="grid-template-columns: 1.2fr 1fr; gap:16px;">
+        <div class="card">
+          <h3 style="margin:8px 0 6px;">요약</h3>
+          <ul>
+            <li>UAM/교통 · 위성 EO · 로보틱스에서의 AI 응용</li>
+            <li>GPU/ARM/NPU 가속 및 양자화·프루닝·지연 예산화</li>
+            <li>실시간 통신(CAN, UART, SPI, I2C) 및 센서 융합</li>
+            <li>DevOps: GitHub Actions, Docker, CI for firmware</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="margin:8px 0 6px;">Quick Facts</h3>
+          <ul>
+            <li>서울, 대한민국</li>
+            <li>관심사: Vertiport Scheduling, Edge Vision, Secure OTA</li>
+            <li>자격/수상: (추가)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" class="container">
+      <h2>Skills</h2>
+      <p class="section-desc">핵심 도메인별 대표 기술</p>
+      <div class="grid skills">
+        <div class="card">
+          <h3>AI / ML</h3>
+          <ul class="skill-list">
+            <li><span>PyTorch · Lightning</span><span class="pill">vision, NLP</span></li>
+            <li><span>ONNX · TensorRT · TVM</span><span class="pill">deploy</span></li>
+            <li><span>Quantization · Pruning</span><span class="pill">INT8/FP16</span></li>
+            <li><span>OpenCV · MMDetection</span><span class="pill">CV</span></li>
+            <li><span>Airflow · MLflow</span><span class="pill">MLOps</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Embedded</h3>
+          <ul class="skill-list">
+            <li><span>C/C++ · CMake</span><span class="pill">bare-metal</span></li>
+            <li><span>FreeRTOS · Zephyr</span><span class="pill">RT</span></li>
+            <li><span>STM32 · ESP32 · Jetson</span><span class="pill">boards</span></li>
+            <li><span>Yocto · Buildroot</span><span class="pill">Linux</span></li>
+            <li><span>CAN · SPI · I2C · UART</span><span class="pill">bus</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Systems & Tools</h3>
+          <ul class="skill-list">
+            <li><span>Docker · GitHub Actions</span><span class="pill">CI/CD</span></li>
+            <li><span>gdb · valgrind</span><span class="pill">debug</span></li>
+            <li><span>Grafana · Prometheus</span><span class="pill">obs</span></li>
+            <li><span>QGIS · MATLAB</span><span class="pill">sim</span></li>
+            <li><span>ROS2 · DDS</span><span class="pill">robotics</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="container">
+      <h2>Projects</h2>
+      <p class="section-desc">대표 AI·임베디드 프로젝트 — 링크/코드/데모 추가</p>
+      <div class="grid projects">
+        <article class="card">
+          <div class="project-cover">UAM Vertiport Scheduling — RL + IP</div>
+          <h3>UAM Vertiport Capacity Optimizer</h3>
+          <p>혼잡 조건에서 이착륙 스케줄을 최적화하는 하이브리드 RL/정수계획 모델. 지연 27% 감소, 처리량 15% 증가 (시뮬레이션 기준).</p>
+          <div class="project-meta">
+            <span class="tag">Python</span>
+            <span class="tag">ILP · RL</span>
+            <a href="#" class="tag">Code →</a>
+          </div>
+        </article>
+        <article class="card">
+          <div class="project-cover">Jetson Edge Vision</div>
+          <h3>Jetson 성능 최적화 Object Detection</h3>
+          <p>TensorRT INT8 양자화 및 레이어 퓨전으로 FPS 2.7× 향상, 전력 30% 절감. 실증 차량에 탑재.</p>
+          <div class="project-meta">
+            <span class="tag">TensorRT</span>
+            <span class="tag">INT8</span>
+            <a href="#" class="tag">Demo →</a>
+          </div>
+        </article>
+        <article class="card">
+          <div class="project-cover">STM32 + FreeRTOS</div>
+          <h3>실시간 센서퓨전 펌웨어</h3>
+          <p>IMU/바로미터/ToF 융합, 태스크 지연 예산화와 우선순위 조정으로 1 kHz 루프 안정화.</p>
+          <div class="project-meta">
+            <span class="tag">C/C++</span>
+            <span class="tag">FreeRTOS</span>
+            <a href="#" class="tag">Docs →</a>
+          </div>
+        </article>
+        <article class="card">
+          <div class="project-cover">EO Sat AI</div>
+          <h3>위성 영상 On‑board AI</h3>
+          <p>메모리 512MB 제약에서 경량 세그멘테이션 모델 설계, onboard 전처리 파이프라인.</p>
+          <div class="project-meta">
+            <span class="tag">ONNX</span>
+            <span class="tag">TVM</span>
+            <a href="#" class="tag">Paper →</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="publications" class="container">
+      <h2>Publications / Patents</h2>
+      <div class="timeline">
+        <div class="tl-item">
+          <div><strong>[2025]</strong> Advancing Earth Observation: A Survey on AI‑Powered Image Processing in Satellites</div>
+          <div class="meta">Survey · Co‑author · EO 위성 AI</div>
+        </div>
+        <div class="tl-item">
+          <div><strong>[2024]</strong> Efficient Vertiport Operations via Scheduling (SCI)</div>
+          <div class="meta">First author · UAM 수용력/스케줄링</div>
+        </div>
+        <div class="tl-item">
+          <div><strong>[2023]</strong> UAM Cybersecurity Evaluation (KCI)</div>
+          <div class="meta">Second author · 보안/운영</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="talks" class="container">
+      <h2>Talks & Teaching</h2>
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(260px,1fr));">
+        <div class="card">
+          <h3>Guest Lecture: Edge AI for Mobility</h3>
+          <p class="meta">2025 · 대학교/연구소 · 자료 공개 가능</p>
+          <a href="#">Slides (PDF)</a>
+        </div>
+        <div class="card">
+          <h3>Workshop: RTOS for AI Sensors</h3>
+          <p class="meta">2024 · FreeRTOS/Zephyr · 실습</p>
+          <a href="#">Repo</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="container">
+      <h2>Contact</h2>
+      <div class="grid" style="grid-template-columns: 1fr 1fr;">
+        <div class="card">
+          <p>협업/문의: <a href="mailto:hello@example.com">hello@example.com</a></p>
+          <p>GitHub: <a href="https://github.com/your-github-username" target="_blank" rel="noopener">@your-github-username</a></p>
+          <p>LinkedIn: <a href="https://www.linkedin.com/in/your-linkedin/" target="_blank" rel="noopener">profile</a></p>
+        </div>
+        <form class="card" name="contact" onsubmit="event.preventDefault(); alert('Thanks! I\'ll get back to you.');">
+          <label>이름<br/><input required placeholder="Your name" style="width:100%"></label><br/>
+          <label>이메일<br/><input type="email" required placeholder="your@email.com" style="width:100%"></label><br/>
+          <label>메시지<br/>
+            <textarea required rows="4" placeholder="프로젝트/협업 제안"></textarea>
+          </label>
+          <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+            <button class="btn primary" type="submit">Send</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div>© <span id="y"></span> Jaekyun Lee · Built with vanilla HTML/CSS/JS · Hosted on GitHub Pages</div>
+    </div>
+    <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+  </footer>
+</body>
+</html>
