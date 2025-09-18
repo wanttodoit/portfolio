@@ -1,0 +1,25 @@
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>간단한 MBTI 테스트</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>나의 MBTI 유형은?</h1>
+        <div id="test-box">
+            <h2 id="question">질문이 여기에 표시됩니다.</h2>
+            <button class="answer-btn" data-type="E">사람들과 어울리는 것을 즐긴다.</button>
+            <button class="answer-btn" data-type="I">혼자 조용히 시간을 보내는 것을 선호한다.</button>
+        </div>
+        <div id="result-box" style="display: none;">
+            <h2>당신의 MBTI 유형은...</h2>
+            <p id="result"></p>
+            <p id="description"></p>
+            <button id="retry-btn">다시하기</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
