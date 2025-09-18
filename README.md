@@ -6,5 +6,6 @@
 - AI, ML, DL
 
 ## 라이브 데모
-- 포트폴리오 사이트: 
+- 포트폴리오 사이트: https://wanttodoit.github.io/portfolio/index.html
+- MBTI 사이트: https://wanttodoit.github.io/portfolio/MBTI.html
 
